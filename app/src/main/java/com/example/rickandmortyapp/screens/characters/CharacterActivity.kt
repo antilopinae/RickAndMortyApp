@@ -1,4 +1,4 @@
-package com.example.rickandmortyapp.ui.characters
+package com.example.rickandmortyapp.screens.characters
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -27,8 +27,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import com.example.rickandmortyapp.domain.models.CharactersResponse
-import com.example.rickandmortyapp.ui.theme.RickAndMortyAppTheme
+import com.example.rickandmortyapp.domain.model.response.CharacterResponse
+import com.example.rickandmortyapp.domain.model.response.CharactersResponse
+import com.example.rickandmortyapp.screens.theme.RickAndMortyAppTheme
 import org.koin.androidx.compose.koinViewModel
 
 class CharacterActivity : ComponentActivity() {
@@ -73,7 +74,7 @@ class CharacterActivity : ComponentActivity() {
     }
 
     @Composable
-    fun CharacterList(characters: List<CharactersResponse>) {
+    fun CharacterList(characters: List<CharacterResponse>) {
         LazyColumn(contentPadding = PaddingValues(16.dp)) {
             items(characters) { item ->
                 CharacterItem(item)
@@ -82,7 +83,7 @@ class CharacterActivity : ComponentActivity() {
     }
 
     @Composable
-    fun CharacterItem(character: CharactersResponse) {
+    fun CharacterItem(character: CharacterResponse) {
         Card(
             modifier = Modifier
                 .fillMaxWidth()

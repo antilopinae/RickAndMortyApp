@@ -1,10 +1,10 @@
-package com.example.rickandmortyapp.domain.models
+package com.example.rickandmortyapp.domain.model.response
 
 import com.google.gson.annotations.SerializedName
 
-data class CharactersResponseFull(
+data class CharactersResponse(
     val info: Info,
-    val results: List<CharactersResponse>,
+    val results: List<CharacterResponse>,
 )
 
 data class Info(
@@ -14,7 +14,7 @@ data class Info(
     val prev: String?,
 )
 
-data class CharactersResponse(
+data class CharacterResponse(
     val id: Long,
     val name: String,
     val status: String,
