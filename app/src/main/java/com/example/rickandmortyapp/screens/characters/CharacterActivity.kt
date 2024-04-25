@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -44,12 +45,12 @@ class CharacterActivity: ComponentActivity() {
     private val viewModel: CharacterViewModel by viewModel()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        initSubscribe()
         setContent {
             RickAndMortyAppTheme {
                 CharacterListScreen()
             }
         }
-        initSubscribe()
     }
     private fun initSubscribe() {
         lifecycleScope.launch {

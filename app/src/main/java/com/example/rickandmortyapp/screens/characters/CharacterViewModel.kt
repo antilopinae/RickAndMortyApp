@@ -33,9 +33,11 @@ class CharacterViewModel(private val repository: CharacterRepository) : ViewMode
             when(data){
                 is Result.Success -> {
                     _characters.emit(data.data)
+                    _isLoading.value = false
                 }
                 is Result.Error -> {
                     data.e.printStackTrace()
+
                 }
             }
         }

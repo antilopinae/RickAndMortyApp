@@ -22,30 +22,22 @@ class ApiServiceImpl(
     override suspend fun getAllCharacters(): Result<List<CharacterResponse>>
     {
         return try{
-            val httpResponse = client.get("/api/character/?page=2")
+            val httpResponse = client.get("/api/character/?page=3")
             println(httpResponse.bodyAsText())
             val response = httpResponse.body<CharactersResponse>()
             Result.Success(response.results)
         } catch(e: Exception){
-            e.printStackTrace()
-            println("########################################")
             Result.Error(e)
         }
     }
     override suspend fun getCharacterById(characterId: Long): Result<CharacterResponse>
     {
         return try{
-            val httpResponse = client.get("$BASE_URL/character/$characterId")
+            val httpResponse = client.get("/api/character/$characterId")
             val response = httpResponse.body<CharactersResponse>()
             Result.Success(response.results.first())
         } catch(e: Exception){
-            e.printStackTrace()
             Result.Error(e)
         }
-    }
-    companion object
-    {
-        private const val BASE_URL = "https://rickandmortyapi.com/api"
-        private const val BASE_URL_PUBLIC = "$BASE_URL/public"
     }
 }
