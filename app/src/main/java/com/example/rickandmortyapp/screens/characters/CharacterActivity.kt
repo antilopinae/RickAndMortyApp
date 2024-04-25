@@ -1,6 +1,8 @@
 package com.example.rickandmortyapp.screens.characters
 
+import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Box
@@ -26,18 +28,36 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.lifecycleScope
 import coil.compose.AsyncImage
 import com.example.rickandmortyapp.domain.model.response.CharacterResponse
 import com.example.rickandmortyapp.domain.model.response.CharactersResponse
 import com.example.rickandmortyapp.screens.theme.RickAndMortyAppTheme
+import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import com.example.rickandmortyapp.domain.model.Result
+import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.toList
 
-class CharacterActivity : ComponentActivity() {
+class CharacterActivity: ComponentActivity() {
+    private val viewModel: CharacterViewModel by viewModel()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             RickAndMortyAppTheme {
                 CharacterListScreen()
+            }
+        }
+        initSubscribe()
+    }
+    private fun initSubscribe() {
+        lifecycleScope.launch {
+            if(viewModel.characters.firstOrNull() != null) return@launch
+            viewModel.characters.collect{ characters ->
+                val intent = Intent(this@CharacterActivity, CharacterActivity::class.java)
+                startActivity(intent)
+                finish()
             }
         }
     }

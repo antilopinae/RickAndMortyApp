@@ -87,6 +87,10 @@ dependencies {
     implementation(libs.ktor.client.android)
     implementation(libs.ktor.client.content.negotiation)
     implementation(libs.ktor.serialization.kotlinx.json)
+//    implementation(libs.ktor.client.json)
+    implementation("io.ktor:ktor-client-json:$ktor_version")
+    implementation("io.ktor:ktor-client-okhttp:$ktor_version")
+
 
     implementation(libs.koin.androidx.compose)
     implementation(libs.kotlinx.serialization.json)

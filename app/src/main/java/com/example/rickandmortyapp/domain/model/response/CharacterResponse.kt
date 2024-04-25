@@ -1,20 +1,24 @@
 package com.example.rickandmortyapp.domain.model.response
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-data class CharactersResponse(
+@Serializable
+class CharactersResponse(
     val info: Info,
-    val results: List<CharacterResponse>,
+    val results: List<CharacterResponse>
 )
 
-data class Info(
+@Serializable
+class Info(
     val count: Long,
     val pages: Long,
     val next: String?,
-    val prev: String?,
+    val prev: String?
 )
 
-data class CharacterResponse(
+@Serializable
+class CharacterResponse(
     val id: Long,
     val name: String,
     val status: String,
@@ -29,23 +33,25 @@ data class CharacterResponse(
     val created: String,
 )
 
-data class Origin(
+@Serializable
+class Origin(
     val name: String,
     val url: String,
 )
 
-data class Location(
+@Serializable
+class Location(
     val name: String,
     val url: String,
 )
 
-enum class CharacterStatus(val statusName: String) {
-    @SerializedName("Dead")
-    DEAD("Dead"),
-
-    @SerializedName("Alive")
-    ALIVE("Alive"),
-
-    @SerializedName("unknown")
-    UNKNOWN("Unknown"),
-}
+//enum class CharacterStatus(val statusName: String) {
+//    @SerializedName("Dead")
+//    DEAD("Dead"),
+//
+//    @SerializedName("Alive")
+//    ALIVE("Alive"),
+//
+//    @SerializedName("unknown")
+//    UNKNOWN("Unknown"),
+//}
