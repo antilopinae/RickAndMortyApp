@@ -1,15 +1,20 @@
 package com.example.rickandmortyapp.screens.characters
 
+import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
+import android.util.AttributeSet
+import android.view.View
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -28,51 +33,46 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.lifecycleScope
 import coil.compose.AsyncImage
 import com.example.rickandmortyapp.domain.model.response.CharacterResponse
-import com.example.rickandmortyapp.domain.model.response.CharactersResponse
 import com.example.rickandmortyapp.screens.theme.RickAndMortyAppTheme
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import com.example.rickandmortyapp.domain.model.Result
-import kotlinx.coroutines.flow.firstOrNull
-import kotlinx.coroutines.flow.toList
+import kotlin.math.absoluteValue
 
-class CharacterActivity: ComponentActivity() {
+class CharacterDetailActivity: ComponentActivity()
+{
     private val viewModel: CharacterViewModel by viewModel()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        initSubscribe()
+
+        val characterNumber: Long = intent.getLongExtra("character", 0)
+
+        lifecycleScope.launch {
+            viewModel.loadCharacterData(characterNumber)
+        }
         setContent {
             RickAndMortyAppTheme {
-                CharacterListScreen()
-            }
-        }
-    }
-    private fun initSubscribe() {
-        lifecycleScope.launch {
-            if(viewModel.characters.firstOrNull() != null) return@launch
-            viewModel.characters.collect{ characters ->
-                val intent = Intent(this@CharacterActivity, CharacterActivity::class.java)
-                startActivity(intent)
-                finish()
+                CharacterDetailScreen()
             }
         }
     }
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    fun CharacterListScreen(viewModel: CharacterViewModel = koinViewModel()) {
-        val isLoading by viewModel.isLoading.collectAsState()
-        val characters by viewModel.characters.collectAsState()
+    fun CharacterDetailScreen(viewModel: CharacterViewModel = koinViewModel()) {
+        val character by viewModel.character.collectAsState()
+        val isLoading by viewModel.isLoadingData.collectAsState()
 
         Scaffold(
             topBar = {
                 TopAppBar(
-                    title = { Text("Rick and Morty characters") },
+                    title = { Text("Characters detail") },
                     colors = TopAppBarDefaults.topAppBarColors(
                         containerColor = MaterialTheme.colorScheme.primaryContainer,
                         titleContentColor = MaterialTheme.colorScheme.primary,
@@ -88,38 +88,63 @@ class CharacterActivity: ComponentActivity() {
                 if (isLoading) {
                     CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
                 } else {
-                    CharacterList(characters)
+                    CharacterInfo(character!!)
                 }
             }
         }
     }
 
-    @Composable
-    fun CharacterList(characters: List<CharacterResponse>) {
-        LazyColumn(contentPadding = PaddingValues(16.dp)) {
-            items(characters) { item ->
-                CharacterItem(item)
-            }
-        }
-    }
 
     @Composable
-    fun CharacterItem(character: CharacterResponse) {
+    private fun CharacterInfo(character: CharacterResponse)
+    {
+//        Card(
+//            modifier = Modifier
+//                .fillMaxWidth()
+//                .fillMaxHeight()
+//                .padding(8.dp)
+//        ) {
+//            Row(
+//                modifier = Modifier.padding(8.dp)
+//            ) {
+//                AsyncImage(
+//                    modifier = Modifier
+//                        .fillMaxSize(),
+//                    model = character.image,
+//                    contentDescription = "Image of ${character.name}"
+//                )
+//            }
+//
+//        }
+
         Card(
             modifier = Modifier
-                .fillMaxWidth()
                 .padding(8.dp)
         ) {
-            Row(modifier = Modifier.padding(8.dp)) {
+            Column(
+                modifier = Modifier.padding(8.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    modifier = Modifier.padding(10.dp),
+                    text = character.name,
+                    style = MaterialTheme.typography.headlineSmall
+                )
+                Text(text = "Gender: ${character.gender}", style = MaterialTheme.typography.titleMedium)
+                Text(text = "Status: ${character.status}", style = MaterialTheme.typography.titleMedium)
+                Text(text = "In series: ${character.episode.size}", style = MaterialTheme.typography.titleMedium)
+                Text(text = "Location: ${character.location.name}", style = MaterialTheme.typography.titleMedium)
+                Text(text = "Species: ${character.species}", style = MaterialTheme.typography.titleMedium)
+
                 AsyncImage(
+                    modifier = Modifier
+                        .fillMaxSize(),
                     model = character.image,
                     contentDescription = "Image of ${character.name}"
                 )
-                Column {
-                    Text(text = character.name, style = MaterialTheme.typography.headlineSmall)
-                    Text(text = character.status, style = MaterialTheme.typography.bodySmall)
-                }
             }
+
         }
     }
 }

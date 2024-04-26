@@ -5,6 +5,6 @@ import com.example.rickandmortyapp.domain.model.Result
 import com.example.rickandmortyapp.domain.model.response.CharacterResponse
 
 interface ApiService {
-    suspend fun getAllCharacters() : Result<List<CharacterResponse>>
+    suspend fun getAllCharacters(page: Long) : Result<CharactersResponse>
     suspend fun getCharacterById(characterId: Long): Result<CharacterResponse>
 }

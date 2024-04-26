@@ -19,13 +19,13 @@ class ApiServiceImpl(
     private val context: Context
 ) : ApiService
 {
-    override suspend fun getAllCharacters(): Result<List<CharacterResponse>>
+    override suspend fun getAllCharacters(page: Long): Result<CharactersResponse>
     {
         return try{
-            val httpResponse = client.get("/api/character/?page=3")
+            val httpResponse = client.get("/api/character/?page=$page")
             println(httpResponse.bodyAsText())
             val response = httpResponse.body<CharactersResponse>()
-            Result.Success(response.results)
+            Result.Success(response)
         } catch(e: Exception){
             Result.Error(e)
         }
@@ -34,8 +34,9 @@ class ApiServiceImpl(
     {
         return try{
             val httpResponse = client.get("/api/character/$characterId")
-            val response = httpResponse.body<CharactersResponse>()
-            Result.Success(response.results.first())
+            val response = httpResponse.body<CharacterResponse>()
+            println(httpResponse.bodyAsText())
+            Result.Success(response)
         } catch(e: Exception){
             Result.Error(e)
         }
