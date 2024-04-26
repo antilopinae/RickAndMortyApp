@@ -98,25 +98,6 @@ class CharacterDetailActivity: ComponentActivity()
     @Composable
     private fun CharacterInfo(character: CharacterResponse)
     {
-//        Card(
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .fillMaxHeight()
-//                .padding(8.dp)
-//        ) {
-//            Row(
-//                modifier = Modifier.padding(8.dp)
-//            ) {
-//                AsyncImage(
-//                    modifier = Modifier
-//                        .fillMaxSize(),
-//                    model = character.image,
-//                    contentDescription = "Image of ${character.name}"
-//                )
-//            }
-//
-//        }
-
         Card(
             modifier = Modifier
                 .padding(8.dp)
@@ -144,7 +125,6 @@ class CharacterDetailActivity: ComponentActivity()
                     contentDescription = "Image of ${character.name}"
                 )
             }
-
         }
     }
 }

@@ -100,7 +100,7 @@ class CharacterListActivity: ComponentActivity() {
         val listState = LazyListState()
 
         LaunchedEffect(key1 = viewModel) {
-            listState.scrollToItem(lastItem)
+            listState.scrollToItem(listState.layoutInfo.totalItemsCount)
         }
 
         LazyColumn(
